@@ -91,6 +91,7 @@ export const Landing = (props: any): JSX.Element => {
   const [password, setPassword] = useState("");
   const [openDialog, setOpenDialog] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [listRightPdding, setListRightPadding] = useState(0);
 
   const makeConnection = () => {
     console.log(password);
@@ -168,6 +169,15 @@ export const Landing = (props: any): JSX.Element => {
   };
 
   useEffect(() => {
+    const element = document.getElementById("webds_wifi_setup_network_list");
+    if (element && element.scrollHeight > element.clientHeight) {
+      setListRightPadding(8);
+    } else {
+      setListRightPadding(0);
+    }
+  }, [networkList]);
+
+  useEffect(() => {
     setConnected(mockConnected);
     setNetworkList(mockList);
   }, []);
@@ -228,15 +238,21 @@ export const Landing = (props: any): JSX.Element => {
             >
               <ListItem key={connected.ssid}>
                 <ListItemIcon>
-                  {connected.secured ? <WifiPasswordIcon /> : <WifiIcon />}
+                  {connected.secured ? (
+                    <WifiPasswordIcon sx={{ color: "primary.main" }} />
+                  ) : (
+                    <WifiIcon sx={{ color: "primary.main" }} />
+                  )}
                 </ListItemIcon>
                 <ListItemText primary={connected.ssid} secondary="Connected" />
               </ListItem>
             </div>
           )}
           <div
+            id="webds_wifi_setup_network_list"
             style={{
               margin: connected ? "0px 24px 24px 24px" : "24px",
+              paddingRight: listRightPdding,
               overflow: "auto"
             }}
           >
@@ -297,7 +313,7 @@ export const Landing = (props: any): JSX.Element => {
             Cancel
           </Button>
           <Button onClick={handleDialogOkayOnClick} sx={{ width: "100px" }}>
-            Okay
+            Connect
           </Button>
         </DialogActions>
       </Dialog>
